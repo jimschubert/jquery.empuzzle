@@ -1,0 +1,25 @@
+<html>
+<head>
+<script src="js/jquery-1.5.2.min.js" type="text/javascript"></script>
+<script src="js/jquery.jigsaw.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function() {
+   var returned = $('img').jigsaw({ 
+   		size: 6,
+   		target: $('#target'),
+   		blank: 'BR'
+   });
+   console.log(returned);
+});
+</script>
+</head>
+<body>
+<h1>jquery.jigsaw</h1>
+<div id="container">
+	<img src="img/cow.jpg" />
+</div>
+<div id="target">
+</div>
+</body>
+</html>
