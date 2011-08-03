@@ -109,7 +109,7 @@
 			
 			// draw
 			jigsaw.draw = function(elem) {
-				console.log(elem);
+			
 			}
 			
 			// validate 
