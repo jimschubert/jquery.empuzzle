@@ -1,3 +1,5 @@
+_note: animation and moving of squares is not yet implemented_
+
 # jquery.jigsaw
 
 Playing 'Jigsy' over at cityposh.com is pretty fun.  I received a few JavaScript errors in Google Chrome, so naturally I wanted to write my own jigsaw plugin.
