@@ -6,9 +6,13 @@
 <script type="text/javascript">
 $(function() {
    var returned = $('img').jigsaw({ 
-   		size: 6,
+   		size: 3,
    		target: $('#target'),
-   		blank: 'BR'
+   		blank: 'BR',
+   		randomize: function(game, d) {
+   			console.log("randomize calling default randomizer!");
+   			d.call(this, game);
+   		}
    });
    console.log(returned);
 });
