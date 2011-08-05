@@ -21,10 +21,10 @@ I'm going to try to keep the options as simple as possible.  Here is an example.
 options available are:
 
 *size* : `[Integer]`  
-*win* : `function(pieces) { }`  
+*win* : `function(game) { }`  
 *target* : `[element]`  
 *blank* : `['TL'|'TR'|'BL'|'BR']`  
-*randomize* : `function(pieces, defaultFunction) { }`  
+*randomize* : `function(game, defaultFunction) { }`  
 
 An example of how to specify these options:
 
