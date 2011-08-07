@@ -7,18 +7,16 @@
 <script type="text/javascript">
 $(function() {
    var returned = $('img').jigsaw({ 
-   		size: 4,
+   		size: 3,
    		target: $('#target'),
-   		blank: 'BR',
-   		randomize: function(game, d) {
-   			console.log("randomize calling default randomizer!");
-   			d.call(this, game);
+   		blank: 'TR',
+   		randomize: function(game, defaultRandomizer) {
+   			defaultRandomizer.call(this, game);
    		}, 
    		win: function() { 
    			alert("You're a winner!"); 
 		}
    });
-   console.log(returned);
 });
 </script>
 </head>
