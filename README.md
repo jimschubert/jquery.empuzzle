@@ -1,5 +1,3 @@
-_note: need to re-implement broken defaultRandomizer function_
-
 # jquery.empuzzle
 
 Playing 'Jigsy' over at cityposh.com is pretty fun.  I received a few JavaScript errors in Google Chrome, so naturally I wanted to write my own puzzle plugin.
