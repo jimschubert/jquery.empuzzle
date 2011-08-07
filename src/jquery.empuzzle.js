@@ -175,8 +175,7 @@
         } /* end move() */
         
         var log = function(msg) { options.DEBUG && console && (typeof console.log === "function") && console.log(msg); }
-        
-		
+        		
         var updatePieces = function(game) { 
 	        var t = game.target, s = game.squares;
 	        game.pieces = new Array(s);
@@ -222,8 +221,23 @@
         }
 		
         var defaultRandomizer = function(game) {
-	        var t = game.target, p = game.pieces, s = game.squares, blank = game.blank;
-	        // TODO: Randomize the array correcly.
+	        var t = game.target, p = game.pieces, s = game.squares, blank = game.blank, 
+	            arrSort = Array.prototype.sort, 
+	            tmp = new Array();
+	        for(var tmpCount = 0 ; tmpCount < s; tmpCount++) {
+	            tmp.push(new Array());
+	        }
+	        for(var row = 0; row < s; row++){
+	            for(var column = s-1; column >= 0; column--) {
+	                tmp[column][row] = p[row][column];
+	            }
+	        }
+	        
+	        var sorter = function(a,b) {
+	            return a[1] < b[1] ? 1 : ((a[0] > b[1]) ? -1 : 0);
+	        };
+	        
+	        game.pieces = arrSort.call(tmp, sorter);
         }
 		
         var _blankify = function(game) {
@@ -256,6 +270,19 @@
 	        $(blank).html('<span></span>');
 	        
 	        return blank;
+        }
+        
+        var _positionPieces = function(offset, pieces, width, height, squares) {
+            var sizeW = (width/squares), sizeH = (height/squares);
+            $.each(pieces, function(row,v) {
+                $.each(v, function(column, piece) { 
+                    $(piece).css({                     
+			            'top' : ( ( row * sizeH ) + offset.top ),
+			            'left' : ( ( column * sizeW ) + offset.left )
+                    });
+                    log(piece);
+                });
+            });
         }
 
         return this.load(function() { 
@@ -302,9 +329,7 @@
 			            'background': ('url(\'' + imageSrc + '\') ' + (sizeW * column * -1) + ' ' + (sizeH * row * -1) ),
 			            'height': sizeH + 'px',
 			            'width': sizeW + 'px',
-			            'cursor': 'pointer',
-			            'top' : ( ( row * sizeH ) + offset.top ),
-			            'left' : ( ( column * sizeW ) + offset.left )
+			            'cursor': 'pointer'
 		            });
 		            var id = Math.random();
 		            validator.push(id);
@@ -329,7 +354,8 @@
                 randomize.call(this, game, defaultRandomizer);
             }
             else { defaultRandomizer.call(this, game); }
-
+            _positionPieces(offset, game.pieces, width, height, squares);
+            
             $('.empuzzle_piece', game.target).live('click', function() {
 	            var fn = move;
 	            $(this).addClass('clicked');
