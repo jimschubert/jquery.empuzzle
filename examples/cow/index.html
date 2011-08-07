@@ -15,7 +15,12 @@ $(function() {
    		}, 
    		win: function() { 
    			alert("You're a winner!"); 
-		}
+		},
+		anim: { 
+		    duration: 400, 
+	        complete: function() { alert('Move completed!'); }
+        },
+		DEBUG: true
    });
 });
 </script>

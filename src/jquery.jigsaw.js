@@ -9,13 +9,7 @@
             return null;
         }
     });
-	
-    // opt:
-    // 	win: function(pieces) { }
-    //  target: element
-    //  blank: 'TL'|'TR'|'BL'|'BR'
-    //  randomize: function(pieces, defaultFunction) { }
-    //  size: Integer
+
     var jigsaw = function(opt) {
         var noop = function() { };
 
@@ -24,8 +18,11 @@
             target: $('.jigsaw_piece:first').parent(),
             blank: jigsaw.Corner.TR,
             randomize: noop,
-            size: 6
+            size: 6,
+            DEBUG: false
         };
+        
+        var options = $.extend({ }, settings, opt );
 
         var move = function(clicked, game, cb) { 
         var g = game, s = g.squares, p = g.pieces, b = g.blank, 
@@ -81,18 +78,30 @@
 		        animateBlank = { };
 		
 		        animateOptions.queue = false;
-		        var wrap = animateOptions.complete;
-		        animateOptions.complete =  function() {
-                    onComplete();
-                    if(typeof wrap === "function")
-                        wrap.apply(this, arguments);
-		        };
+		        animateOptions.complete =  (function(wrap) {
+		            if(wrap) { 
+                        var args = [];
+                        for (var argument=2, len = arguments.length; argument < len; argument++) {
+                            args.push(arguments[argument]);
+                        };
+                        
+                        return function() { 
+                            log('[Curry] Function has been curried: ' + wrap);
+                            onComplete();
+                            wrap.apply(this, args); 
+                        }
+                    }
+                    
+                    log('[Curry] No anim.complete function was specified.');
+                    return onComplete;
+		        })(animateOptions.complete);
 	
                 if(jigsaw.Direction[direction]>>1==1){
                     var row = lc.y, 
 	                    bsquare = locations.blank.x,
 	                    tmpId;
                     if(direction == 'E'){
+                        log('[Move] Moving left by '+ count + ' squares.');
 	                    animatePiece['left'] = '+=' + width;
 	                    animateBlank['left'] = '-=' + (width*count);
 	
@@ -105,6 +114,7 @@
 		
 	                    }
                     } else { /* W */
+                        log('[Move] Moving right by '+ count + ' squares.');
 	                    animatePiece['left'] = '-=' + width;
 	                    animateBlank['left'] = '+=' + (width*count);
 	                    for(var column = lc.x; column > bsquare; column--) {
@@ -130,6 +140,7 @@
 	                    tmpId, tmpBlank = p[bsquare][column];
 	                    
 	                if(direction == 'N'){
+                        log('[Move] Moving up by '+ count + ' squares.');
 		                animatePiece['top'] = '-=' + height;
 		                animateBlank['top'] = '+=' + (height*count);
 	                    for(var row = bsquare, csquare = lc.y; row < csquare; row++) {
@@ -139,6 +150,7 @@
 		                    piece.removeClass('clicked');
 	                    }
 	                } else { /* S */
+                        log('[Move] Moving down by '+ count + ' squares.');
 		                animatePiece['top'] = '+=' + height;
 		                animateBlank['top'] = '-=' + (height*count);
 		                for(var row = bsquare, csquare = lc.y; row > csquare; row--) {
@@ -159,8 +171,11 @@
 	                    }
                     });
                 }		
-            } else { console && (typeof console.log === "function") && console.log("no move"); }
-        }
+            } else { log("no move"); }
+        } /* end move() */
+        
+        var log = function(msg) { options.DEBUG && console && (typeof console.log === "function") && console.log(msg); }
+        
 		
         var updatePieces = function(game) { 
 	        var t = game.target, s = game.squares;
@@ -176,6 +191,7 @@
         }
 
         var draw = function(game) {	
+            log('[Draw]');
 	        var t = game.target, s = game.squares-1, p = game.pieces;
 	        t.html('');
 	        for(var rr = 0; rr <= s; rr++) {
@@ -195,9 +211,11 @@
 		
 	        for(var row = 0; row < s; row++ ){
 		        for(var column = 0; column < s; column++) {
+		            log('row:'+row+',column:'+column);
 			        var currentId = $(p[row][column]).attr('puzzle_id');
-			        var want = v[row+column];
-			        if(currentId !== want) { err = true };
+			        var want = v[(row*s)+column];
+			        log('[Validate] current:' + currentId + ', expecting: ' + want);
+			        if(currentId != want) { err = true };
 		        }
 	        }
 	        if(!err) win.call(this);
@@ -218,15 +236,19 @@
 	        switch(blankLocation) {
 		        case jigsaw.Corner.TL:
 		        blank = pieces[0][0];
+		        log('[Blank] TL: [0][0]');
 		        break;
 		        case jigsaw.Corner.TR:
 		        blank = pieces[0][squares-1];
+		        log('[Blank] TR: [0]['+ (squares-1) + ']');
 		        break;
 		        case jigsaw.Corner.BL:
 		        blank = pieces[squares-1][0];
+		        log('[Blank] BL: ['+ (squares-1) + '][0]');
 		        break;
 		        case jigsaw.Corner.BR:
 		        blank =	pieces[squares-1][squares-1];
+		        log('[Blank] BR: ['+ (squares-1) + ']['+ (squares-1) + ']');
 		        break;
 	        }			
 	        $(blank).css({ 'background': 'none'});
@@ -235,9 +257,6 @@
 	        
 	        return blank;
         }
-		
-		
-        var options = $.extend({ }, settings, opt );
 
         return this.load(function() { 
             var game, originalImg, 
@@ -301,7 +320,8 @@
 	            'blankLocation' : blankLocation,
 	            'validator' : validator,
 	            'onWin' : options.win,
-	            'anim' : options.animateOptions || {}
+	            'anim' : (options.anim || {}),
+	            'DEBUG' : options.DEBUG
             };
 			
             game['blank'] = _blankify.call(this, game);	
@@ -312,7 +332,6 @@
 
             $('.jigsaw_piece', game.target).live('click', function() {
 	            var fn = move;
-	            $('.jigsaw_piece').removeClass('clicked'); 
 	            $(this).addClass('clicked');
 	            fn.call(jigsaw, this, game);				
             });
@@ -323,7 +342,7 @@
 		
     // Settings lookup. 1 so jigsaw.Corner[value] || default works
     jigsaw.Corner = { TL: 1, TR: 2, BL: 3, BR: 4 };
-    jigsaw.Direction = { N: 4, E: 2, S: 4, W: 2 };
-
+    jigsaw.Direction = { N: 4, E: 2, S: 4, W: 2 }; // these need to be truthy. E must be 2.
+    
     $.fn.jigsaw = jigsaw;
 })(jQuery);
