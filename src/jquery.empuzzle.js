@@ -326,7 +326,7 @@
 		            var piece = $('<div class="empuzzle_piece"></div>');
 		            piece.css({ 
 			            'position' : 'absolute',	
-			            'background': ('url(\'' + imageSrc + '\') ' + (sizeW * column * -1) + ' ' + (sizeH * row * -1) ),
+			            'background': ('url(\'' + imageSrc + '\') ' + (sizeW * column * -1) + 'px ' + (sizeH * row * -1) + 'px' ),
 			            'height': sizeH + 'px',
 			            'width': sizeW + 'px',
 			            'cursor': 'pointer'
