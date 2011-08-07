@@ -1,10 +1,14 @@
-_note: animation and moving of squares is not yet implemented_
+_note: need to re-implement broken defaultRandomizer function_
 
 # jquery.empuzzle
 
 Playing 'Jigsy' over at cityposh.com is pretty fun.  I received a few JavaScript errors in Google Chrome, so naturally I wanted to write my own puzzle plugin.
 
 jquery.empuzzle is that plugin.
+
+# N-puzzle
+
+jquery.empuzzle is named for the N-puzzle it creates.  Since 'enpuzzle' isn't recognized as a _real_ word, it uses the archaic 'empuzzle'.  
 
 # Usage
 
@@ -35,6 +39,12 @@ An example of how to specify these options:
         blank: 'TR', 
         win: myValidation /* function reference */ 
     };
+    
+# Reading / References
+
+[N-puzzle @ wikipedia](http://en.wikipedia.org/wiki/N-puzzle)  
+["A Real-Time Algorithm for the (n2− 1)-Puzzle" by Ian Parberry](http://larc.unt.edu/ian/pubs/saml.pdf)  
+
 
 # License
 
