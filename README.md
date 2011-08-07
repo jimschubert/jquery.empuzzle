@@ -1,30 +1,32 @@
 _note: animation and moving of squares is not yet implemented_
 
-# jquery.jigsaw
+# jquery.empuzzle
 
-Playing 'Jigsy' over at cityposh.com is pretty fun.  I received a few JavaScript errors in Google Chrome, so naturally I wanted to write my own jigsaw plugin.
+Playing 'Jigsy' over at cityposh.com is pretty fun.  I received a few JavaScript errors in Google Chrome, so naturally I wanted to write my own puzzle plugin.
 
-jquery.jigsaw is that plugin.
+jquery.empuzzle is that plugin.
 
 # Usage
 
 I'm going to try to keep the options as simple as possible.  Here is an example.
 
-	$('#myOriginalImage').jigsaw({
+	$('#myOriginalImage').empuzzle({
    		size: 6,
    		target: $('#target'), 
    		blank: 'BR'
 	});
 
-# .jigsaw( options )
+# .empuzzle( options )
 
 options available are:
 
-*size* : `[Integer]`  
+*size* : `{Integer}`  
 *win* : `function(game) { }`  
-*target* : `[element]`  
-*blank* : `['TL'|'TR'|'BL'|'BR']`  
-*randomize* : `function(game, defaultFunction) { }`  
+*target* : `{element}`  
+*blank* : `{'TL'|'TR'|'BL'|'BR'}`  
+*randomize* : `function(game, defaultRandomizer) { }`  
+*anim* : `{jQuery animation options}`  
+*DEBUG* : {true|false}  
 
 An example of how to specify these options:
 
@@ -36,7 +38,7 @@ An example of how to specify these options:
 
 # License
 
-jquery.jigsaw is released under the MIT License.
+jquery.empuzzle is released under the MIT License.
 
 	Copyright (c) 2011 James Schubert
 

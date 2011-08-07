@@ -1,5 +1,5 @@
 ;
-// jquery.jigsaw is based on the 'Jigsy' javascript puzzle on Cityposh.com.
+// jquery.empuzzle is based on the 'Jigsy' javascript puzzle on Cityposh.com.
 // I really enjoy the game, and I thought I'd try out some code for creating a similar game.
 (function($) { 
 	
@@ -10,13 +10,13 @@
         }
     });
 
-    var jigsaw = function(opt) {
+    var empuzzle = function(opt) {
         var noop = function() { };
 
         var settings = { 
             win: noop,
-            target: $('.jigsaw_piece:first').parent(),
-            blank: jigsaw.Corner.TR,
+            target: $('.empuzzle_piece:first').parent(),
+            blank: empuzzle.Corner.TR,
             randomize: noop,
             size: 6,
             DEBUG: false
@@ -96,7 +96,7 @@
                     return onComplete;
 		        })(animateOptions.complete);
 	
-                if(jigsaw.Direction[direction]>>1==1){
+                if(empuzzle.Direction[direction]>>1==1){
                     var row = lc.y, 
 	                    bsquare = locations.blank.x,
 	                    tmpId;
@@ -183,7 +183,7 @@
 	        $.each(game.pieces, function(i,v) { 
 		        game.pieces[i] = new Array();
 	        });
-	        var items = $('.jigsaw_piece', t);	
+	        var items = $('.empuzzle_piece', t);	
 	        for(var index = 0, size = items.length ; index < size; index++) {
 		        var row = Math.floor(index / s);
 		        game.pieces[row].push( $(items[index]) );
@@ -234,19 +234,19 @@
 		
 	        // "place" blank square
 	        switch(blankLocation) {
-		        case jigsaw.Corner.TL:
+		        case empuzzle.Corner.TL:
 		        blank = pieces[0][0];
 		        log('[Blank] TL: [0][0]');
 		        break;
-		        case jigsaw.Corner.TR:
+		        case empuzzle.Corner.TR:
 		        blank = pieces[0][squares-1];
 		        log('[Blank] TR: [0]['+ (squares-1) + ']');
 		        break;
-		        case jigsaw.Corner.BL:
+		        case empuzzle.Corner.BL:
 		        blank = pieces[squares-1][0];
 		        log('[Blank] BL: ['+ (squares-1) + '][0]');
 		        break;
-		        case jigsaw.Corner.BR:
+		        case empuzzle.Corner.BR:
 		        blank =	pieces[squares-1][squares-1];
 		        log('[Blank] BR: ['+ (squares-1) + ']['+ (squares-1) + ']');
 		        break;
@@ -264,7 +264,7 @@
 	            height, 
 	            imageSrc, 
 	            offset,
-	            blankLocation = jigsaw.Corner[options.blank], 
+	            blankLocation = empuzzle.Corner[options.blank], 
 	            target = options.target,
 	            squares = options.size, 
 	            randomize = options.randomize, validator = [];
@@ -281,7 +281,7 @@
 
             // ensure output target exists
             if(!target) {
-	            target = $('<div class="jigsaw_target"></div>');
+	            target = $('<div class="empuzzle_target"></div>');
 	            originalImg.after(target);
             }
 
@@ -296,7 +296,7 @@
 	            pieces.push(new Array(squares));
 	            for(var column = 0; column < len; column++) {
 		            // create divs, displacing background
-		            var piece = $('<div class="jigsaw_piece"></div>');
+		            var piece = $('<div class="empuzzle_piece"></div>');
 		            piece.css({ 
 			            'position' : 'absolute',	
 			            'background': ('url(\'' + imageSrc + '\') ' + (sizeW * column * -1) + ' ' + (sizeH * row * -1) ),
@@ -330,19 +330,19 @@
             }
             else { defaultRandomizer.call(this, game); }
 
-            $('.jigsaw_piece', game.target).live('click', function() {
+            $('.empuzzle_piece', game.target).live('click', function() {
 	            var fn = move;
 	            $(this).addClass('clicked');
-	            fn.call(jigsaw, this, game);				
+	            fn.call(empuzzle, this, game);				
             });
 			
             draw.call(this, game); // This sets things off
         });
     };	
 		
-    // Settings lookup. 1 so jigsaw.Corner[value] || default works
-    jigsaw.Corner = { TL: 1, TR: 2, BL: 3, BR: 4 };
-    jigsaw.Direction = { N: 4, E: 2, S: 4, W: 2 }; // these need to be truthy. E must be 2.
+    // Settings lookup. 1 so empuzzle.Corner[value] || default works
+    empuzzle.Corner = { TL: 1, TR: 2, BL: 3, BR: 4 };
+    empuzzle.Direction = { N: 4, E: 2, S: 4, W: 2 }; // these need to be truthy. E must be 2.
     
-    $.fn.jigsaw = jigsaw;
+    $.fn.empuzzle = empuzzle;
 })(jQuery);
