@@ -15,22 +15,21 @@
 
         var settings = { 
             win: noop,
-            target: $('.empuzzle_piece:first').parent(),
-            blank: empuzzle.Corner.TR,
+            target: null,
+            blank: 'BR',
             randomize: noop,
             size: 6,
             DEBUG: false
         };
         
-        var options = $.extend({ }, settings, opt );
-
         var move = function(clicked, game, cb) { 
         var g = game, s = g.squares, p = g.pieces, b = g.blank, 
-            count, direction, width, height, cid, bid, animateOptions = { duration: 500 };	
+            count, direction, width, height, cid, bid, animateOptions = { duration: 300 };	
             width = $(clicked).width();
             height = $(clicked).height();
             cid = $(clicked).attr('puzzle_id');
-            bid = $(b).attr('puzzle_id');
+            bid = $(b).attr('puzzle_id'),
+            output = game.target;
 
         animateOptions = $.extend(animateOptions, g.anim);
 
@@ -86,13 +85,13 @@
                         };
                         
                         return function() { 
-                            log('[Curry] Function has been curried: ' + wrap);
+                            empuzzle.log('[Curry] Function has been curried: ' + wrap);
                             onComplete();
                             wrap.apply(this, args); 
                         }
                     }
                     
-                    log('[Curry] No anim.complete function was specified.');
+                    empuzzle.log('[Curry] No anim.complete function was specified.');
                     return onComplete;
 		        })(animateOptions.complete);
 	
@@ -101,31 +100,31 @@
 	                    bsquare = locations.blank.x,
 	                    tmpId;
                     if(direction == 'E'){
-                        log('[Move] Moving left by '+ count + ' squares.');
+                        empuzzle.log('[Move] Moving left by '+ count + ' squares.');
 	                    animatePiece['left'] = '+=' + width;
 	                    animateBlank['left'] = '-=' + (width*count);
 	
 	                    for(var column = lc.x; column < bsquare; column++) {
 		                    var id = tmpId || $(p[row][column]).attr('puzzle_id');
-		                    var piece = $(':getPiece('+ id +')', target).stop().animate(animatePiece,animateOptions);								
+		                    var piece = $(':getPiece('+ id +')', output).stop().animate(animatePiece,animateOptions);								
 		                    tmpId = piece.next(':not(.blank)').attr('puzzle_id') || tmpId;							
 		                    p[row][column+1] = piece;
 		                    piece.removeClass('clicked');
 		
 	                    }
                     } else { /* W */
-                        log('[Move] Moving right by '+ count + ' squares.');
+                        empuzzle.log('[Move] Moving right by '+ count + ' squares.');
 	                    animatePiece['left'] = '-=' + width;
 	                    animateBlank['left'] = '+=' + (width*count);
 	                    for(var column = lc.x; column > bsquare; column--) {
 		                    var id = tmpId || $(p[row][column]).attr('puzzle_id');
-		                    var piece = $(':getPiece('+ id +')', target).stop().animate(animatePiece,animateOptions);							
+		                    var piece = $(':getPiece('+ id +')', output).stop().animate(animatePiece,animateOptions);							
 		                    tmpId = piece.prev(':not(.blank)').attr('puzzle_id') || tmpId;							
 		                    p[row][column-1] = piece;
 		                    piece.removeClass('clicked');
 	                    }
                     }
-                    var movedBlank = $(':getPiece('+ bid +')', target).stop().animate(animateBlank, { 
+                    var movedBlank = $(':getPiece('+ bid +')', output).stop().animate(animateBlank, { 
 	                    duration: animateOptions.duration,
 	                    queue: false,
 	                    complete: function() {					
@@ -140,28 +139,28 @@
 	                    tmpId, tmpBlank = p[bsquare][column];
 	                    
 	                if(direction == 'N'){
-                        log('[Move] Moving up by '+ count + ' squares.');
+                        empuzzle.log('[Move] Moving up by '+ count + ' squares.');
 		                animatePiece['top'] = '-=' + height;
 		                animateBlank['top'] = '+=' + (height*count);
 	                    for(var row = bsquare, csquare = lc.y; row < csquare; row++) {
 		                    var id = $(p[row+1][column]).attr('puzzle_id');
-		                    var piece = $(':getPiece('+ id +')', target).stop().animate(animatePiece,animateOptions);						
+		                    var piece = $(':getPiece('+ id +')', output).stop().animate(animatePiece,animateOptions);						
 		                    p[row][column] = piece;
 		                    piece.removeClass('clicked');
 	                    }
 	                } else { /* S */
-                        log('[Move] Moving down by '+ count + ' squares.');
+                        empuzzle.log('[Move] Moving down by '+ count + ' squares.');
 		                animatePiece['top'] = '+=' + height;
 		                animateBlank['top'] = '-=' + (height*count);
 		                for(var row = bsquare, csquare = lc.y; row > csquare; row--) {
 		                    var id = $(p[row-1][column]).attr('puzzle_id');
-		                    var piece = $(':getPiece('+ id +')', target).stop().animate(animatePiece,animateOptions);						
+		                    var piece = $(':getPiece('+ id +')', output).stop().animate(animatePiece,animateOptions);						
 		                    p[row][column] = piece;
 		                    piece.removeClass('clicked');
 	                    }
 	                }
 	                
-                    var movedBlank = $(':getPiece('+ bid +')', target).stop().animate(animateBlank, { 
+                    var movedBlank = $(':getPiece('+ bid +')', output).stop().animate(animateBlank, { 
 	                    duration: animateOptions.duration,
 	                    queue: false,
 	                    complete: function() {					
@@ -171,11 +170,9 @@
 	                    }
                     });
                 }		
-            } else { log("no move"); }
+            } else { empuzzle.log("no move"); }
         } /* end move() */
-        
-        var log = function(msg) { options.DEBUG && console && (typeof console.log === "function") && console.log(msg); }
-        		
+                		
         var updatePieces = function(game) { 
 	        var t = game.target, s = game.squares;
 	        game.pieces = new Array(s);
@@ -190,7 +187,7 @@
         }
 
         var draw = function(game) {	
-            log('[Draw]');
+            empuzzle.log('[Draw]');
 	        var t = game.target, s = game.squares-1, p = game.pieces;
 	        t.html('');
 	        for(var rr = 0; rr <= s; rr++) {
@@ -210,10 +207,10 @@
 		
 	        for(var row = 0; row < s; row++ ){
 		        for(var column = 0; column < s; column++) {
-		            log('row:'+row+',column:'+column);
+		            empuzzle.log('row:'+row+',column:'+column);
 			        var currentId = $(p[row][column]).attr('puzzle_id');
 			        var want = v[(row*s)+column];
-			        log('[Validate] current:' + currentId + ', expecting: ' + want);
+			        empuzzle.log('[Validate] current:' + currentId + ', expecting: ' + want);
 			        if(currentId != want) { err = true };
 		        }
 	        }
@@ -250,19 +247,19 @@
 	        switch(blankLocation) {
 		        case empuzzle.Corner.TL:
 		        blank = pieces[0][0];
-		        log('[Blank] TL: [0][0]');
+		        empuzzle.log('[Blank] TL: [0][0]');
 		        break;
 		        case empuzzle.Corner.TR:
 		        blank = pieces[0][squares-1];
-		        log('[Blank] TR: [0]['+ (squares-1) + ']');
+		        empuzzle.log('[Blank] TR: [0]['+ (squares-1) + ']');
 		        break;
 		        case empuzzle.Corner.BL:
 		        blank = pieces[squares-1][0];
-		        log('[Blank] BL: ['+ (squares-1) + '][0]');
+		        empuzzle.log('[Blank] BL: ['+ (squares-1) + '][0]');
 		        break;
 		        case empuzzle.Corner.BR:
 		        blank =	pieces[squares-1][squares-1];
-		        log('[Blank] BR: ['+ (squares-1) + ']['+ (squares-1) + ']');
+		        empuzzle.log('[Blank] BR: ['+ (squares-1) + ']['+ (squares-1) + ']');
 		        break;
 	        }			
 	        $(blank).css({ 'background': 'none'});
@@ -280,19 +277,23 @@
 			            'top' : ( ( row * sizeH ) + offset.top ),
 			            'left' : ( ( column * sizeW ) + offset.left )
                     });
-                    log(piece);
+                    empuzzle.log(piece);
                 });
             });
         }
-
-        return this.load(function() { 
+    
+    return this.each(function() {
+        $(this).load(function() { 
+            var options = $.extend({ }, settings, opt );
+            empuzzle.log = function(msg) { options.DEBUG && console && (typeof console.log === "function") && console.log(msg); }
+            
             var game, originalImg, 
 	            width, 
 	            height, 
 	            imageSrc, 
 	            offset,
-	            blankLocation = empuzzle.Corner[options.blank], 
-	            target = options.target,
+	            blankLocation = (empuzzle.Corner[options.blank] || 'BR'), 
+	            output = options.target,
 	            squares = options.size, 
 	            randomize = options.randomize, validator = [];
 				
@@ -307,15 +308,16 @@
             imageSrc = originalImg.attr('src');
 
             // ensure output target exists
-            if(!target) {
-	            target = $('<div class="empuzzle_target"></div>');
-	            originalImg.after(target);
+            if(!output || (output instanceof HTMLDocument)) {
+	            var tmp = $('<div class="empuzzle_target"></div>');
+	            originalImg.after(tmp);
+                output = $('.empuzzle_target:first');
             }
 
             $(originalImg).hide();	
-            $(target).width(width);
-            $(target).height(height);
-            offset = $(target).offset();
+            $(output).width(width);
+            $(output).height(height);
+            offset = $(output).offset();
 
             // setup board
             var pieces = new Array();
@@ -339,7 +341,7 @@
             }		
 			
             game = {
-	            'target': target,
+	            'target': output,
 	            'pieces': pieces,
 	            'squares': squares,
 	            'blankLocation' : blankLocation,
@@ -350,13 +352,13 @@
             };
 			
             game['blank'] = _blankify.call(this, game);	
-            if(randomize){ 
+            if(randomize !== noop){ 
                 randomize.call(this, game, defaultRandomizer);
             }
             else { defaultRandomizer.call(this, game); }
             _positionPieces(offset, game.pieces, width, height, squares);
             
-            $('.empuzzle_piece', game.target).live('click', function() {
+            $('.empuzzle_piece', game.output).live('click', function() {
 	            var fn = move;
 	            $(this).addClass('clicked');
 	            fn.call(empuzzle, this, game);				
@@ -364,8 +366,9 @@
 			
             draw.call(this, game); // This sets things off
         });
+     });
     };	
-		
+    	
     // Settings lookup. 1 so empuzzle.Corner[value] || default works
     empuzzle.Corner = { TL: 1, TR: 2, BL: 3, BR: 4 };
     empuzzle.Direction = { N: 4, E: 2, S: 4, W: 2 }; // these need to be truthy. E must be 2.

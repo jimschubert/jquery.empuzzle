@@ -1,0 +1,30 @@
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+<script src="../../../src/jquery.empuzzle.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function() {
+    $('#first').empuzzle({
+	    target: $('#target')
+    });
+    
+    $('#second').empuzzle();
+});
+</script>
+</head>
+<body>
+<h1>jquery.empuzzle</h1>
+<h2>Specifying target</h2>
+<div id="container_with_target">
+	<img id="first" src="../img/cow.jpg" />
+    <div id="target">
+    </div>
+</div>
+<h2>Without target</h2>
+<em>Not specifying a target gets the first creates a sibling div and outputs to that</em>
+<div>
+	<img id="second" src="../img/cow.jpg" />
+</div>
+</body>
+</html>
