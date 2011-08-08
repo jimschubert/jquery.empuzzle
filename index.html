@@ -17,6 +17,8 @@
       margin: 0 auto;
       width: 700px;
     }
+    #target { height: 550px; width: 550px; }
+    .other { padding: 4px; display:inline-block; }
     h1 { font-size: 3.8em; color: #06060a; margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
@@ -24,7 +26,7 @@
     h3 { text-align: center; color: #06060a; }
     a { color: #06060a; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
+    .download { position:absolute; top: 150px; right: 0; }
     pre { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
@@ -32,17 +34,34 @@
   
 <script type="text/javascript">
 $(function() {
-   $('#jimschubert').empuzzle({ 
-   		size: 5,
-   		target: $('#target'),
-   		blank: 'BR',
-   		win: function(game) { 
-   			alert("You're a winner!"); 
-		},
-		anim: { 
-		    duration: 200
-        }
-   });
+    var t = $('#target');
+
+    var doPuzzle = function(jqObj /* or selector */){
+        $(jqObj).empuzzle({ 
+            size: 5,
+            target: t,
+            blank: 'BR',
+            win: function(game) { 
+	            alert("You're a winner!"); 
+            },
+            anim: { 
+                duration: 200
+            }
+        });
+    };
+       
+    $('.other').click(function(evt) {
+        var toLoad = $(this).attr('href');
+        var img = $('<img></img>');
+        $(img).attr('src', toLoad);       
+        
+        doPuzzle($(img));  
+        $('#image_container').append(img);
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    doPuzzle('#jimschubert');
 });
 </script>
 </head>
@@ -67,22 +86,39 @@ $(function() {
     </div>
 
     <h2>Try it!</h2>
+    <p>
+        <a href="act_of_congress.jpg" class="other">Congress</a>
+        <a href="doe_flies.jpg" class="other">Doe/Flies</a>
+        <a href="anne_hathaway.jpg" title="Anne Hathaway's cottage!" class="other">Anne Hathaway</a>
+        <a href="pipe_organ.jpg" class="other">Pipe Organ</a>
+        <a href="jimschubert.jpg" class="other">Author</a>
+    </p>
     <div>
-        <img id="jimschubert" src="jimschubert.jpg" />
+            
         <div id="target">
+        </div>
+        
+        <div id="image_container">
+            <img id="jimschubert" src="jimschubert.jpg" />
+        </div>
+        
+        <div id="copyright">
+            <p>
+                <em>Images &copy; James Schubert. All rights reserved.</em>
+            </p>
         </div>
     </div>
     
     <h2>Dependencies</h2>
-<p>jQuery (recommend 1.5.2 or higher)
-http://jquery.com/</p>
-<h2>Authors</h2>
-<p>Jim Schubert (james.schubert@gmail.com)
-<br/>
-<br/>      </p>
-<h2>Contact</h2>
-<p>Jim Schubert (james.schubert@gmail.com)
-<br/>      </p>
+    <p>jQuery (recommend 1.5.2 or higher)
+    http://jquery.com/</p>
+    <h2>Authors</h2>
+    <p>Jim Schubert (james.schubert@gmail.com)
+    <br/>
+    <br/>      </p>
+    <h2>Contact</h2>
+    <p>Jim Schubert (james.schubert@gmail.com)
+    <br/>      </p>
 
 
     <h2>Download</h2>
