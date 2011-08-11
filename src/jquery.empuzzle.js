@@ -1,4 +1,8 @@
 ;
+// Copyright (c) 2011 James Schubert
+// Released under the MIT license
+// see https://github.com/jimschubert/jquery.empuzzle/blob/master/MIT-LICENSE.txt
+// 
 // jquery.empuzzle is based on the 'Jigsy' javascript puzzle on Cityposh.com.
 // I really enjoy the game, and I thought I'd try out some code for creating a similar game.
 (function($) { 
