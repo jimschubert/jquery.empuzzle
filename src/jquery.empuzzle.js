@@ -243,8 +243,8 @@
 		
         var _blankify = function(game) {
 	        var blank, 
-		        pieces = game.pieces
-		        squares = game.squares
+		        pieces = game.pieces,
+		        squares = game.squares,
 		        blankLocation = game.blankLocation; 
 		
 	        // "place" blank square
@@ -298,7 +298,7 @@
 	            offset,
 	            blankLocation = (empuzzle.Corner[options.blank] || 'BR'), 
 	            output = options.target,
-	            squares = options.size, 
+	            squares = (options.size > 0 ? options.size : settings.size), 
 	            randomize = options.randomize, validator = [];
 				
             if(this instanceof HTMLImageElement) {
@@ -315,7 +315,7 @@
             if(!output || (output instanceof HTMLDocument)) {
 	            var tmp = $('<div class="empuzzle_target"></div>');
 	            originalImg.after(tmp);
-                output = $('.empuzzle_target:first');
+                output = $(originalImg).siblings('.empuzzle_target:first');
             }
 
             $(originalImg).hide();	
