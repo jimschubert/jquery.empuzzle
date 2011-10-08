@@ -193,7 +193,7 @@ test('size (variations from default size = 6)', function() {
 test('pseudo-teardown (no real tests)', function() {
     expect(1);    
     // Comment out this line if you want to see results of all tests.
-    // $('#test_target').html('');    
+    $('#test_target').html('');    
     ok(1);
 });
 
